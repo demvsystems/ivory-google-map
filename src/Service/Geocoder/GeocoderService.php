@@ -41,12 +41,12 @@ class GeocoderService extends AbstractService
     /**
      * @param GeocoderRequestInterface $request
      *
-     * @return GeocoderResponse
+     * @return GeocoderResponse|null
      */
     public function geocode(GeocoderRequestInterface $request)
     {
         $response = $this->getClient()->sendRequest($this->createRequest($request->build()));
-        $data = $this->parse((string) $response->getBody(), [
+        $data     = $this->parse((string) $response->getBody(), [
             'pluralization_rules' => [
                 'address_component' => 'address_components',
                 'type'              => 'types',
@@ -54,7 +54,7 @@ class GeocoderService extends AbstractService
             ],
         ]);
 
-        return $this->buildResponse($data);
+        return $data ? $this->buildResponse($data) : null;
     }
 
     /**
